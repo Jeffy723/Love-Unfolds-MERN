@@ -6,7 +6,7 @@ export default function StoryDetail() {
   const [story, setStory] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/stories/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/stories/${id}`)
       .then(res => res.json())
       .then(data => setStory(data.story || data))
       .catch(err => console.log(err));

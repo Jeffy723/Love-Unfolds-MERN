@@ -22,7 +22,8 @@ export default function Register() {
       return setMessage("❌ Passwords do not match");
     }
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
+      // This uses the URL you set in your client/.env file
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, formData);
       setMessage("🎉 Account created successfully!");
       setTimeout(() => navigate("/login"), 1200);
     } catch (error) {

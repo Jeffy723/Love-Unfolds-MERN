@@ -22,9 +22,9 @@ export default function Profile() {
       };
 
       const [userRes, storiesRes] = await Promise.all([
-        fetch("http://localhost:5000/api/auth/me", { headers }),
-        fetch("http://localhost:5000/api/stories/mine", { headers })
-      ]);
+  	fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { headers }),
+ 	 fetch(`${import.meta.env.VITE_API_URL}/api/stories/mine`, { headers })
+	]);
 
       if (!userRes.ok || !storiesRes.ok) {
         console.error(`Fetch failed. Auth: ${userRes.status}, Stories: ${storiesRes.status}`);

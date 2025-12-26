@@ -20,7 +20,8 @@ export default function CreateStory() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/stories", {
+      // Corrected to use backticks and a single try-catch flow
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,14 +34,22 @@ export default function CreateStory() {
       
       if (res.ok) {
         setStatus({ type: "success", message: "✨ Your whisper has been unfolded." });
+        // Reset form on success
+        setTitle("");
+        setContent("");
         setTimeout(() => navigate("/stories"), 1500);
       } else {
         setLoading(false);
         setStatus({ type: "error", message: data.message || "Something went wrong." });
       }
-    } catch (err) {
+    } catch (error) {
+      // Combined catch block handles all network or server failures
       setLoading(false);
-      setStatus({ type: "error", message: "Server connection failed." });
+      console.error("Submission error:", error);
+      setStatus({ 
+        type: "error", 
+        message: "Server connection failed. Sanctuary unreachable." 
+      });
     }
   };
 
@@ -49,7 +58,7 @@ export default function CreateStory() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="flex flex-col lg:flex-row gap-16">
           
-          {/* 1. Editor Section - Scaled Down Elegance */}
+          {/* 1. Editor Section */}
           <div className="flex-1">
             <div className="mb-6">
               <span className="rounded-full bg-pink-500/10 dark:bg-pink-500/20 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-pink-600 dark:text-pink-400 border border-pink-500/20 backdrop-blur-md">
@@ -110,7 +119,7 @@ export default function CreateStory() {
             </form>
           </div>
 
-          {/* 2. Live Preview - Compact Liquid Glass */}
+          {/* 2. Live Preview */}
           <div className="lg:w-80 hidden lg:block">
             <div className="sticky top-32">
               <h3 className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6 ml-4">Sanctuary Preview</h3>
