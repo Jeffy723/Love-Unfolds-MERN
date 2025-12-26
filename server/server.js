@@ -10,23 +10,30 @@ connectDB();
 
 const app = express();
 
-// --- UPDATED CORS FOR DEPLOYMENT ---
+// --- DYNAMIC CORS CONFIGURATION ---
 const allowedOrigins = [
-  "http://localhost:5173", // Local Development
-  "https://your-frontend-name.vercel.app" // Your future live Vercel URL
+  "http://localhost:5173",
+  "https://love-unfolds-mern.vercel.app", // Your actual Vercel URL
+  process.env.ALLOWED_ORIGINS             // Automatically reads the variable you added to Render
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    
+    // Check if the origin is in our allowed list
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      // This will now log exactly WHICH URL is being blocked in your Render logs
+      console.error(`CORS Blocked Origin: ${origin}`);
+      callback(new Error('The CORS policy for this site does not allow access.'));
     }
-    return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 // ----------------------------------
 
