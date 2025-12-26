@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply transition-colors duration-700 ease-in-out antialiased;
+  }
+}
+
+/* Custom blur for extra 'Apple' quality */
+.backdrop-blur-apple {
+  backdrop-filter: blur(40px) saturate(180%);
+}
+
+@media (max-width: 640px) {
+  /* Reduce blur on mobile for better performance */
+  .backdrop-blur-[40px], .backdrop-blur-[60px] {
+    backdrop-filter: blur(15px);
+  }
+  
+  /* Make text slightly smaller for phone screens */
+  h1 {
+    @apply text-4xl !important;
+  }
+}
