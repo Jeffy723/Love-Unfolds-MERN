@@ -21,10 +21,11 @@ export default function Profile() {
         "Content-Type": "application/json"
       };
 
+      // Correctly using the live environment variable for fetching data
       const [userRes, storiesRes] = await Promise.all([
-  	fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { headers }),
- 	 fetch(`${import.meta.env.VITE_API_URL}/api/stories/mine`, { headers })
-	]);
+        fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { headers }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/stories/mine`, { headers })
+      ]);
 
       if (!userRes.ok || !storiesRes.ok) {
         console.error(`Fetch failed. Auth: ${userRes.status}, Stories: ${storiesRes.status}`);
@@ -48,11 +49,13 @@ export default function Profile() {
     fetchData();
   }, [token]);
 
+  // --- UPDATED DELETE FUNCTION ---
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this whisper? 🌸")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/stories/${id}`, {
+      // FIX: Changed from localhost to the dynamic VITE_API_URL variable
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stories/${id}`, {
         method: "DELETE",
         headers: { 
           "Authorization": `Bearer ${token}`,
@@ -61,6 +64,7 @@ export default function Profile() {
       });
 
       if (res.ok) {
+        // UI Update: Remove the story from the list immediately
         setMyStories(prev => prev.filter((story) => story._id !== id));
       } else {
         const errorData = await res.json();
@@ -68,6 +72,7 @@ export default function Profile() {
       }
     } catch (err) {
       console.error("Delete error:", err);
+      alert("Sanctuary connection lost. Please try again later.");
     }
   };
 
@@ -84,18 +89,15 @@ export default function Profile() {
   return (
     <div className="max-w-6xl mx-auto px-6 pb-20 pt-10 relative z-10">
       
-      {/* 1. Profile Header - Refined Capsule */}
+      {/* 1. Profile Header */}
       <div className="bg-white/30 dark:bg-white/5 backdrop-blur-[40px] border border-white/60 dark:border-white/10 rounded-[3rem] p-8 md:p-12 mb-16 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
         
-        {/* Specular Highlight */}
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
 
-        {/* Avatar Squircle */}
         <div className="w-28 h-28 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-[2rem] flex items-center justify-center text-white text-4xl font-black shadow-xl transition-transform hover:scale-105 duration-500">
           {user?.name?.charAt(0).toUpperCase() || "?"}
         </div>
 
-        {/* User Info */}
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tighter mb-1.5 leading-none">
             {user?.name || "Storyteller"}
