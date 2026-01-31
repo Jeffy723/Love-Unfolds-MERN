@@ -51,7 +51,7 @@ exports.getStories = async (req, res) => {
       limit,
       total,
       totalPages: Math.ceil(total / limit),
-      stories
+      stories,
       hasMore: page * limit < total
     });
   } catch (error) {
