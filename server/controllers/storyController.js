@@ -52,6 +52,7 @@ exports.getStories = async (req, res) => {
       total,
       totalPages: Math.ceil(total / limit),
       stories
+      hasMore: page * limit < total
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
